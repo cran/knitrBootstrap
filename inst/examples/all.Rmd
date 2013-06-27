@@ -1,0 +1,23 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{All examples}
+-->
+# All examples #
+```{r}
+library(knitr);render_html()
+```
+```{r child="../doc/two-D.Rmd"}
+```
+```{r child="../doc/cars.Rmd"}
+```
+```{r child="engines.Rmd"}
+```
+```{r child="../doc/illusions.Rmd"}
+```
+```{r child="../doc/maps.Rmd"}
+```
+```{r child="../doc/math.Rmd"}
+```
+Author: [Jim Hester](http://jimhester.com)
+Created: 2013 Mar 28 03:22:28 PM
+Last Modified: 2013 Jun 13 12:08:51 PM
