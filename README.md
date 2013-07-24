@@ -1,4 +1,3 @@
-
 # Knitr Bootstrap #
 A framework to create bootstrap styled HTML reports from knitr Rmarkdown.
 
@@ -16,10 +15,11 @@ A framework to create bootstrap styled HTML reports from knitr Rmarkdown.
 * [Styles](#styles)
 
 ## Features ##
-* Automatic table of contents constructed from h1-4 tags using [tocify] and styled with [meny].
-* Images are automatically centered, thumbnailed and lightboxed using [fancybox]
-* Style with themes from [bootswatch], optionally including a style switch.
-* Code blocks automatically highlighted using [highlight.js], optionally including a style switch.
+* Automatic table of contents constructed from h1-4 tags using [tocify],
+  configurable both fixed onscreen and offscreen using [meny].
+* Images are automatically centered, thumbnailed and lightboxed using [magnific popup].
+* Style with themes from [bootswatch], optionally including a dynamic style switch.
+* Code blocks automatically highlighted using [highlight.js], optionally including a dynamic style switch.
 * Code/Output block and plot visibility can be toggled with a mouse click
   * Globally
   * Per language
@@ -52,6 +52,7 @@ install_github(username='jimhester', repo='knitrBootstrap')
 ## Usage ##
 
 Reports can be built within [R](#Rfunction), a [Makefile](#makefile), by [RStudio](#rstudio) or with [Vim](#vim).
+
 ### R ###
 ```r
 library(knitrBootstrap)
@@ -136,7 +137,7 @@ arguments if you want to use an alternative style by default.
 [tocify]: http://gregfranko.com/jquery.tocify.js
 [rstudio/markdown]: https://github.com/rstudio/markdown
 [knitrBootstrap]: https://jimhester.github.io/knitrBootstrap
-[fancybox]: http://fancyapps.com/fancybox
+[magnific popup]: http://dimsemenov.com/plugins/magnific-popup
 [mathjax]: http://mathjax.org
 [bootswatch]: http://bootswatch.com
 [devtools]: https://github.com/hadley/devtools

@@ -1,19 +1,14 @@
-\name{bootstrap_HTML}
-\alias{bootstrap_HTML}
-\title{Add the knitrBootstrap html header to an HTML file produced by knitr.}
+\name{create_header}
+\alias{create_header}
+\title{Create the html header based on the options given}
 \usage{
-  bootstrap_HTML(input, output = NULL, boot_style = NULL,
-    code_style = NULL, chooser = NULL,
-    nav_type = c("offscreen", "onscreen"),
+  create_header(boot_style = NULL, code_style = NULL,
+    chooser = NULL, nav_type = c("offscreen", "onscreen"),
     thumbsize = c("span3", "span4", "span5", "span6", "span7", "span8", "span2", "span1"),
     show_code = FALSE,
-    graphics = getOption("menu.graphics"))
+    graphics = getOption("menu.graphics"), outfile = NULL)
 }
 \arguments{
-  \item{input}{html filename to be wrapped with Bootstrap.}
-
-  \item{output}{html filename to output.}
-
   \item{boot_style}{the bootstrap style to use if
   character, if NULL uses the default, if TRUE a menu is
   shown with the available styles.}
@@ -36,9 +31,12 @@
 
   \item{graphics}{what graphics to use for the menus, only
   applicable if code_style or boot_style are true.}
+
+  \item{outfile}{if NULL, write the output file in a
+  temporary directory, if a character write it to that
+  location, if FALSE, return the header as a character.}
 }
 \description{
-  This function includes the knitrBootstrap HTML headers to
-  wrap the knitr output in bootstrap styled HTML.
+  Create the html header based on the options given
 }
 
