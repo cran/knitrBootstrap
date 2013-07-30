@@ -1,3 +1,20 @@
+knitrBootstrap 0.7.0
+====================
+
+* Features
+  * use magnific popup to do lightboxes rather than fancybox.
+  * option to use offscreen or onscreen table of contents navigation.
+  * option to set thumbnail size.
+  * option to show/hide code blocks by default.
+
+* Fixes
+  Make knitr and R dependencies explicit
+
+knitrBootstrap 0.6.5
+====================
+
+* implement boostrap_html to apply the html header to any arbitrary html file.
+
 knitrBootstrap 0.6.1
 ====================
 
@@ -8,6 +25,7 @@ knitrBootstrap 0.6.1
   knit_bootstrap function is unchanged.
 
 * fix #9, wrong url in DESCRIPTION
+
 knitrBootstrap 0.6
 ==================
 

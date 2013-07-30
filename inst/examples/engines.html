@@ -20,36 +20,40 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 
-<!-- highlight.js -->
-<link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/default.min.css"">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
-<script src="http://yandex.st/highlightjs/7.3/languages/r.min.js"></script>
-
 <!-- bootstrap -->
-<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css"" id="style" media="screen">
+<link rel="stylesheet" type="text/css" href=http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css id="style" media="screen">
 <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 
 <!-- bootstrap-responsive -->
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" media="screen">
 
+<!-- highlight.js -->
+<link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/default.min.css">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/languages/r.min.js"></script>
+
 <!-- tocify -->
-<!--<link rel="stylesheet" href="http://gregfranko.com/jquery.tocify.js/css/jquery.tocify.css">-->
 <script src="http://gregfranko.com/jquery.tocify.js/js/jquery.tocify.min.js"></script>
 
-<!-- fancybox -->
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css">
-<script src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.js"></script>
+<!-- Manific Popup -->
+<script src="http://dimsemenov.com/plugins/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+<link rel="stylesheet" href="http://dimsemenov.com/plugins/magnific-popup/dist/magnific-popup.css">
 
 <!-- meny -->
 <script src="http://lab.hakim.se/meny/js/meny.min.js"></script>
-<!--<link rel="stylesheet" href="http://lab.hakim.se/meny/css/demo.css">-->
+
 <script>
 /* run scripts when document is ready */
 $(function() {
   "use strict";
 
+  /* type of toc navigation */
+  var nav = "offscreen";
+
   /* size of thumbnails */
   var thumbsize = "span3";
+
+  var show_code = false;
 
   /* included languages */
   var languages = [];
@@ -114,8 +118,6 @@ $(function() {
     $(this).before(button);
   });
 
-  /* syntax highlight code blocks*/
-
   /* onclick toggle next code block */
   $('.toggle').click(function() {
     $(this).button('toggle');
@@ -123,38 +125,37 @@ $(function() {
     return false;
   });
 
-
-  /* toggle code blocks hidden by default */
-  $('div.source').toggle();
-
-  /* give images a fancybox and thumbnail classes to allow lightbox and thumbnails TODO: make fancybox prev next if grouped */
+  /* give images a lightbox and thumbnail classes to allow lightbox and thumbnails TODO: make gallery if graphs are grouped */
   $('p').each(function(){
     $(this).find('img').unwrap().wrapAll('<div class="rimage default"></div>');
   });
   $('div.rimage').each(function(){
     $(this).addClass("row-fluid thumbnails");
-    $(this).children('img').wrap('<a href="#" class="' + thumbsize + ' thumbnail"></a></li>').addClass('fancybox');
+    $(this).children('img').wrap('<a href="#" class="mfp-image ' + thumbsize + ' thumbnail"></a></li>');
   });
 
-  /* fancybox */
-  $(".fancybox").each( function() {
-    var img = $(this);
-    $(this).fancybox({
-      afterClose: function(){
-        img.css('display', 'block');
-      },
+  /* Magnific Popup */
+  $(".thumbnail").each(function(){
+    $(this).magnificPopup({
+      disableOn: 768,
+      closeOnContentClick: true,
+
+      type: 'image',
+      items: {
+        src: $(this).find('img').attr('src'),
+      }
     });
   });
 
   /* add bootstrap classes */
-  $('body').wrapInner('<div class="container-fluid"><div class="row-fluid"><div class="contents span12"><div class="offset2 span8">');
+  $('body').wrapInner('<div class="container-fluid"><div class="row-fluid"><div class="contents">');
 
   var create_language_links = function(){
     var text='';
     var language;
     for(language in languages){
       if(languages.hasOwnProperty(language)){
-        text += '<li><a href="#" class="source toggle-global btn-link btn" type="source.' + language + '">' + language + '</a></li>\n';
+        text += '<li><button style="width: 100%;" class="toggle-global btn-link btn source ' + language + '" type="source.' + language + '">' + language + '</button></li>\n';
       }
     }
     return text;
@@ -167,14 +168,14 @@ $(function() {
         <div class="pull-right">\
           <span class="navbar-text">Toggle</span>\
           <div class="btn-group dropup" data-toggle="button-checkbox">\
-            <button type="source" class="toggle-global btn">Code</button>\
+            <button type="source" class="source toggle-global btn">Code</button>\
             <button class="btn dropdown-toggle" data-toggle="dropdown">\
               <span class="caret"></span>\
             </button>\
             <ul class="dropdown-menu pull-right">'
               + create_language_links() +
             '</div>\
-            <button type="output" class="toggle-global btn active">Output</button>\
+            <button type="output" class="output toggle-global btn active">Output</button>\
             <button type="thumbnails" class="toggle-global btn active">Plots</button>\
           </div>\
         </div>\
@@ -184,7 +185,6 @@ $(function() {
 
   /* global toggles FIXME explicitly toggle all on/off using global variables */
   $('.toggle-global').click(function(){
-    $(this).button('toggle');
     var type = $(this).attr('type');
     $('.' + type).button('toggle');
     $('div.' + type).slideToggle();
@@ -194,9 +194,8 @@ $(function() {
   /* if using render_html() hook, make functions links to custom R search */
   /*search in ggplot documentation or inside-r.org */
   $("span.functioncall").replaceWith(function(){
-
     return '<a target="_blank" href="http://www.google.com/search?sourceid=navclient&gfns=1&\
-q=site:docs.ggplot2.org/current OR site:inside-r.org ' +
+      q=site:docs.ggplot2.org/current OR site:inside-r.org ' +
     $(this).text() + '">' + $(this).text()+'</a>'
   });
 
@@ -207,41 +206,54 @@ q=site:docs.ggplot2.org/current OR site:inside-r.org ' +
   var last_p = p.filter(':last');
   p.detach();
   last_p.addClass('muted').attr('id','credit');
-  last_p.append('<p>styled with <a href="https://github.com/jimhester/knitr_bootstrap">knitr_bootstrap</a></p>');
+  last_p.append('<p>styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap</a></p>');
   last_p.appendTo("body");
-  last_p.wrap('<div id="footer"><div class="container" /></div>');
+  last_p.wrap('<div id="footer">');
 
-  $('.container-fluid > .row-fluid').append('<div class="meny"><div id="toc" class="well" /></div><div class="meny-arrow" />');
+  $('.container-fluid > .row-fluid').prepend('<div id="toc" class="well"/></div>');
 
-  /* add table of contents */
+  if(nav == 'offscreen'){
+    $('#toc').wrap('<div class="meny">');
+    $('.contents').addClass('span12').wrapInner('<div class="offset2 span8">');
+    $('.meny').after('<div class="meny-arrow">');
+
+    var meny = Meny.create({
+        menuElement: document.querySelector( '.meny' ),
+        contentsElement: document.querySelector( '.contents' ),
+        position: 'left',
+        width: 260
+    });
+  }
+  else {
+    $('#toc').css({ "padding-bottom": "36000px", "margin-bottom": "-36000px"}).addClass('span3');
+    $('.contents').addClass('offset3 span8');
+  }
+
+  /* table of contents */
   $('#toc').tocify({extendPage: false});
 
-  $('#toc').addClass('meny');
-
-  /*add meny*/
-  var meny = Meny.create({
-      menuElement: document.querySelector( '.meny' ),
-      contentsElement: document.querySelector( '.contents' ),
-      position: 'left',
-      width: 260
-  });
+  /* toggle code blocks hidden by default */
+  if(show_code){
+    /* toggle source bottons pressed */
+    $('.source').filter(":button").addClass('active');
+  }
+  else {
+    /* hide code blocks */
+    $('div.source').toggle();
+  }
 
   /* remove paragraphs with no content */
   $('p:empty').remove();
 
 });
+
 </script>
 <style>
-/* Knitr_bootstrap styles
--------------------------------------------------- */
+/* Knitr_bootstrap styles */
 #wrap .container-fluid {
-  padding-left: 0;
+  padding: 0;
   overflow: hidden;
 }
-.meny-left.row-fluid {
-  margin-left: 0%;
-}
-
 .toggle{
   text-transform: capitalize;
 }
@@ -255,14 +267,14 @@ q=site:docs.ggplot2.org/current OR site:inside-r.org ' +
 .row-fluid.thumbnails .span5.thumbnail:nth-child(4n+1) { margin-left: 0px; }
 .row-fluid.thumbnails .span5.thumbnail:nth-child(2n+1) { margin-left: 0px; }
 
-/* Sticky footer styles
--------------------------------------------------- */
+/* Sticky footer styles */
 * {
   margin:0;
 }
 html,
 body {
     height: 100%;
+    padding:0 !important;
     /* The html and body elements cannot have any padding or margin. */
     /*overflow-x: hidden;*/
 }
@@ -287,13 +299,14 @@ body {
 }
 
 /* Tocify */
-/* -------------------------------------------------- */
 
 #toc {
-  padding 0px;
-  margin: 0px;
   border-radius: 0px;
-  height:100%
+  height:100%;
+  padding: 9px;
+  margin-right: -10px;
+  position: fixed;
+  width: 240px;
 }
 /* Top level subheader elements.  These are the first nested items underneath a header element. */
 .header li {
@@ -308,6 +321,11 @@ body {
 .meny {
   height: 100%;
 }
+
+.meny-left.row-fluid {
+  margin-left: 0%;
+}
+
 
 .meny-arrow {
   position: absolute;
@@ -337,12 +355,19 @@ body {
             transition: opacity 0.2s ease;
   }
 
+.row-fluid > div.contents.span12 {
+  margin-left: 0;
+}
 .navbar-inner > .pull-right {
   padding-right: 20px;
 }
-</style>
 
-<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css"" id="style" media="screen">
+.mfp-figure:after {
+  background: white;
+}
+
+</style>
+<link rel="stylesheet" type="text/css" href=http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css id="style" media="screen">
 <link rel="alternate stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" title="Default" media="screen">
 <link rel="alternate stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootswatch/2.3.1/amelia/bootstrap.min.css" title="Amelia" media="screen">
 <link rel="alternate stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cerulean/bootstrap.min.css" title="Cerulean" media="screen">
@@ -391,7 +416,7 @@ $(function() {
 );
 </script>
 
-<link id="code-style" rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/default.min.css"">
+<link id="code-style" rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/default.min.css">
 <link rel="alternate stylesheet" title="Default" href="http://yandex.st/highlightjs/7.3/styles/default.min.css">
 <link rel="alternate stylesheet" title="Dark" href="http://yandex.st/highlightjs/7.3/styles/dark.min.css">
 <link rel="alternate stylesheet" title="FAR" href="http://yandex.st/highlightjs/7.3/styles/far.min.css">
@@ -547,9 +572,7 @@ For If In Else Next Break .. .... <span class="string">"<span class="keyword">NU
 foo %union% bar
 %<span class="string">"test"</span>%
 `<span class="string">"test"</span>`
-</pre></div>
-
-<p></div></div></p>
+</pre></div></div></div>
 
 <h2>Bash</h2>
 
@@ -583,9 +606,7 @@ genApacheConf(){
  host_root="${APACHE_HOME_DIR}$1/$2"
  echo -e "# Host $1/$2 :"
 }
-</pre></div>
-
-<p></div></div></p>
+</pre></div></div></div>
 
 <h2>Perl</h2>
 
@@ -616,9 +637,7 @@ sub load
 
 =head1 NAME
 POD till the end of file
-</pre></div>
-
-<p></div></div></p>
+</pre></div></div></div>
 
 <h2>Ruby</h2>
 
@@ -643,9 +662,7 @@ end
 anIdentifier = an_identifier
 Constant = 1
 render action: :new
-</pre></div>
-
-<p></div></div></p>
+</pre></div></div></div>
 
 <h2>Python</h2>
 
@@ -661,9 +678,7 @@ def somefunc(param1='', param2=0):
 
         >>> message = '''interpreter
         ... prompt'''
-</pre></div>
-
-<p></div></div></p>
+</pre></div></div></div>
 
 <p>Author: <a href="http://jimhester.com">Jim Hester</a>
 Created: 2013 Apr 23 09:05:58 AM

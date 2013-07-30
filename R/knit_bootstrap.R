@@ -4,7 +4,7 @@
 #' output in bootstrap styled HTML.
 #'
 #' @inheritParams knit_bootstrap_md
-#' @inheritParams bootstrap_HTML
+#' @inheritParams create_header
 #' @param input Rmd input file to knit into HTML
 #' @param output HTML output file created, if NULL uses the input filename with
 #'        the extension changed to .html
@@ -22,6 +22,9 @@
 
 knit_bootstrap =
   function(input, output = NULL, boot_style=NULL, code_style=NULL, chooser=NULL,
+           nav_type=c('offscreen', 'onscreen'),
+           thumbsize=c('span3', 'span4', 'span5', 'span6', 'span7', 'span8', 'span2', 'span1'),
+           show_code=FALSE,
            markdown_options=c('mathjax', 'base64_images', 'use_xhtml'),
            ..., envir = parent.frame(), text = NULL,
            quiet = FALSE, encoding = getOption('encoding'),
@@ -34,6 +37,7 @@ knit_bootstrap =
   knit_bootstrap_md(md_file, output, boot_style=boot_style,
                     code_style=code_style, chooser=chooser,
                     markdown_options = markdown_options,
+                    nav_type=nav_type, thumbsize=thumbsize, show_code=show_code,
                     ..., graphics=graphics)
   invisible(output)
 }
@@ -49,7 +53,7 @@ knit_bootstrap_Rmd = knit_bootstrap
 #'        the extension changed to .html
 #' @param text a character vector as an alternative way to provide the input
 #'   file
-#' @inheritParams bootstrap_HTML
+#' @inheritParams create_header
 #' @param markdown_options passed to markdownToHTML, defaults to mathjax,
 #'        base64_images and use_xhtml.
 #' @param ... options passed to \code{\link[markdown]{markdownToHTML}}
@@ -59,11 +63,16 @@ knit_bootstrap_Rmd = knit_bootstrap
 knit_bootstrap_md =
 function(input, output = NULL, boot_style=NULL, code_style=NULL, chooser=NULL,
          text = NULL,
+         nav_type=c('offscreen', 'onscreen'),
+         thumbsize=c('span3', 'span4', 'span5', 'span6', 'span7', 'span8', 'span2', 'span1'),
+         show_code=FALSE,
          markdown_options=c('mathjax', 'base64_images', 'use_xhtml'),
          graphics = getOption("menu.graphics"), ...) {
 
   require(knitr)
-  header = create_header(boot_style, code_style, chooser, graphics)
+  header = create_header(boot_style=boot_style, code_style=code_style,
+                         chooser=chooser, nav_type=nav_type, thumbsize=thumbsize, show_code=show_code, graphics=graphics)
+
   require(markdown)
   if(is.null(output))
     output <- sub_ext(input, 'html')
@@ -85,41 +94,38 @@ function(input, output = NULL, boot_style=NULL, code_style=NULL, chooser=NULL,
 #' output in bootstrap styled HTML.
 #' @param input html filename to be wrapped with Bootstrap.
 #' @param output html filename to output.
-#' @param boot_style the bootstrap style to use if character, if NULL uses the
-#'        default, if TRUE a menu is shown with the available styles.
-#' @param code_style the highlight.js code style to use if character, if NULL
-#'        uses the defaults, if TRUE a menu is shown with the available styles.
-#' @param chooser a character vector, if contains "boot", adds a bootstrap
-#'        style chooser to the HTML, if contains "code" adds the bootstrap
-#'        code chooser.
-#' @param graphics what graphics to use for the menus, only applicable if
-#'        code_style or boot_style are true.
+#' @inheritParams create_header
 #' @export bootstrap_HTML
 
 bootstrap_HTML = function(input, output = NULL, boot_style=NULL,
                           code_style=NULL, chooser=NULL,
+                          nav_type=c('offscreen', 'onscreen'),
+                          thumbsize=c('span3', 'span4', 'span5', 'span6', 'span7', 'span8', 'span2', 'span1'),
+                          show_code=FALSE,
                           graphics = getOption("menu.graphics")) {
   if(is.null(output))
     output <- sub_ext(input, 'html')
-  stopifnot(input != output)
+  if(input == output)
+    stop('input cannot be the same as output:', input, ' ', output)
 
-  header_lines =
-    create_header(boot_style, code_style, chooser, graphics, no_file=TRUE)
+  header = create_header(boot_style=boot_style, code_style=code_style,
+                         chooser=chooser, nav_type=nav_type, thumbsize=thumbsize, show_code=show_code,
+                         graphics=graphics, outfile=FALSE)
 
-  lines = file_lines(input)
+  lines = read_file(input)
 
   #bit of a hack, check if substitute happened based on string length
   input_length = nchar(lines)
 
   #add header to file at the end of the header
   lines =
-    sub('</head>', paste(escape(header_lines), '</head>', collapse='\n'), lines)
+    sub('</head>', paste(escape(header), '</head>', collapse='\n'), lines)
 
   #add header before the body if no header found
   if(nchar(lines) == input_length)
     lines =
       sub('<body>',
-          paste('<head>', escape(header_lines), '</head><body>', collapse='\n')
+          paste('<head>', escape(header), '</head><body>', collapse='\n')
           , lines)
 
   cat(lines, '\n', file=output)
@@ -128,72 +134,116 @@ bootstrap_HTML = function(input, output = NULL, boot_style=NULL,
 
 
 style_url="http://netdna.bootstrapcdn.com/bootswatch/2.3.1/$style/bootstrap.min.css"
-link_pattern='<link[^\n\r]+rel="stylesheet"[^\n\r]+href="'
+link_pattern='<link[^\n\r]+rel="stylesheet"[^\n\r]+href='
 default_boot_style='http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css'
 default_code_style='http://yandex.st/highlightjs/7.3/styles/default.min.css'
+nav_pattern='nav = "[^"]+"'
+thumb_pattern='thumbsize = "[^"]+"'
+show_code_pattern='show_code = [^;]+;'
 
 get_style <- function(style, style_type, title, graphics = getOption("menu.graphics")){
-  style = if(!is.null(style) && style %in% names(style_type)){
-    style_type[style]
+  style = if(is.null(style)){
+    style_type[1]
   }
   else if(!is.null(style) && style == TRUE){
     style_type[menu(names(style_type), graphics, title)]
   }
   else {
-    style_type[1]
+    style_type[match.arg(tolower(style), names(style_type))]
   }
   return(style)
 }
 
+#' Create the html header based on the options given
+#' @param boot_style the bootstrap style to use if character, if NULL uses the
+#'        default, if TRUE a menu is shown with the available styles.
+#' @param code_style the highlight.js code style to use if character, if NULL
+#'        uses the defaults, if TRUE a menu is shown with the available styles.
+#' @param chooser a character vector, if contains "boot", adds a bootstrap
+#'        style chooser to the HTML, if contains "code" adds the bootstrap
+#'        code chooser.
+#' @param nav_type either offscreen to use a dynamic offscreen navigation menu, or
+#'        onscreen to use a fixed onscreen navigation menu.
+#' @param thumbsize size of thumbnails in bootstrap spans.
+#' @param show_code show code blocks by default.
+#' @param graphics what graphics to use for the menus, only applicable if
+#'        code_style or boot_style are true.
+#' @param outfile if NULL, write the output file in a temporary directory, if a
+#'        character write it to that location, if FALSE, return the header as a
+#'        character.
+
+#' @export create_header
+
 create_header <-
-  function(boot_style=NULL, code_style=NULL, chooser=c('boot', 'code'),
-           graphics = getOption("menu.graphics"), no_file=FALSE){
+  function(boot_style=NULL, code_style=NULL, chooser=NULL,
+           nav_type=c('offscreen', 'onscreen'),
+           thumbsize=c('span3', 'span4', 'span5', 'span6', 'span7', 'span8', 'span2', 'span1'),
+           show_code=FALSE,
+           graphics = getOption("menu.graphics"), outfile=NULL){
 
   boot_style=get_style(boot_style, boot_styles, 'Bootstrap Style', graphics)
   code_style=get_style(code_style, code_styles, 'Code Block Style', graphics)
 
-  package_root = system.file(package='knitrBootstrap')
-  header = paste(package_root, 'templates/knitr_bootstrap.html', sep='/')
+  includes = read_package_file('templates/knitr_bootstrap_includes.html')
+  javascript = read_package_file('templates/knitr_bootstrap.js')
+  css = read_package_file('templates/knitr_bootstrap.css')
 
-  header_lines = file_lines(header)
-
-  chooser = match.arg(chooser, several.ok=TRUE)
-  filenames = if('boot' %in% chooser){
-    paste(package_root, 'templates/knitr_bootstrap_style_toggle.html', sep='/')
+  chooser = match.arg(chooser, choices=c(NA, 'boot', 'code'), several.ok=TRUE)
+  boot_toggle = if('boot' %in% chooser){
+    read_package_file('templates/knitr_bootstrap_style_toggle.html')
   }
-  filenames = if('code' %in% chooser){
-    c(filenames, paste(package_root,
-                       'templates/knitr_bootstrap_code_style_toggle.html',
-                       sep='/'))
+  code_toggle = if('code' %in% chooser){
+    read_package_file('templates/knitr_bootstrap_code_style_toggle.html')
   }
 
-  output_lines = paste(header_lines, append_files(filenames, outfile), sep='\n')
+  nav_type= match.arg(nav_type)
+  javascript = sub(nav_pattern, paste('nav = "', nav_type, '"', sep=''), javascript)
+
+  thumbsize=match.arg(thumbsize)
+  javascript = sub(thumb_pattern, paste('thumbsize = "', thumbsize, '"', sep=''), javascript)
+
+  if(is.logical(show_code) && show_code)
+    javascript = sub(show_code_pattern, 'show_code = true;', javascript)
+
+  output = paste(includes,
+                 '<script>', javascript, '</script>',
+                 '<style>', css, '</style>',
+                 boot_toggle,
+                 code_toggle,
+                 sep='\n')
 
   #update bootstrap style
-  output_lines =
-    gsub(paste('(', link_pattern, ')(', default_boot_style, ')', sep=''),
-         paste('\\1', boot_style, '"', sep=''), output_lines)
+  output =
+    gsub(paste('(', link_pattern, ')("', default_boot_style, ')"', sep=''),
+         paste('\\1', boot_style, sep=''), output)
 
   #update code style
-  output_lines =
-    gsub(paste('(', link_pattern, ')(', default_code_style, ')', sep=''),
-         paste('\\1', code_style, '"', sep=''), output_lines)
+  output =
+    gsub(paste('(', link_pattern, ')"(', default_code_style, ')"', sep=''),
+         paste('\\1', '"', code_style, '"', sep=''), output)
 
-  if(no_file)
-    return(output_lines)
+  if(is.logical(outfile) && outfile == FALSE)
+    return(output)
 
-  outfile = paste(tempdir(), 'knitr_bootstrap_full.html', sep='/')
+  if(is.null(outfile))
+    outfile = paste(tempdir(), 'knitr_bootstrap_full.html', sep='/')
 
-  cat(output_lines, '\n', file=outfile)
+  cat(output, '\n', file=outfile)
   invisible(outfile)
 }
 
-append_files <- function(files, output){
-  paste(mapply(file_lines, files), collapse='\n')
+append_files <- function(files){
+  paste(mapply(read_package_file, files), collapse='\n')
 }
 
-file_lines <- function(file){
-  stopifnot(file.exists(file))
+read_package_file <- function(path){
+  location = paste(system.file(package='knitrBootstrap'), path, sep='/')
+  read_file(location)
+}
+
+read_file <- function(file){
+  if(!file.exists(file))
+    stop('file: ', file, ' does not exist')
   readChar(file, 10e6)
 }
 
@@ -208,47 +258,47 @@ sub_ext = function(x, ext) {
 escape = function(string) gsub("([\"$`\\])", "\\\\\\1", string)
 
 boot_styles = c(
-  'Default'='http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css',
-  'Amelia'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/amelia/bootstrap.min.css',
-  'Cerulean'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cerulean/bootstrap.min.css',
-  'Cosmo'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cosmo/bootstrap.min.css',
-  'Cyborg'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cyborg/bootstrap.min.css',
-  'Journal'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/journal/bootstrap.min.css',
-  'Flatly'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/flatly/bootstrap.min.css',
-  'Readable'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/readable/bootstrap.min.css',
-  'Simplex'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/simplex/bootstrap.min.css',
-  'Slate'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/slate/bootstrap.min.css',
-  'Spacelab'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/spacelab/bootstrap.min.css',
-  'Spruce'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/spruce/bootstrap.min.css',
-  'Superhero'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/superhero/bootstrap.min.css',
-  'United'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/united/bootstrap.min.css'
+  'default'='http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css',
+  'amelia'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/amelia/bootstrap.min.css',
+  'cerulean'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cerulean/bootstrap.min.css',
+  'cosmo'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cosmo/bootstrap.min.css',
+  'cyborg'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/cyborg/bootstrap.min.css',
+  'journal'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/journal/bootstrap.min.css',
+  'flatly'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/flatly/bootstrap.min.css',
+  'readable'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/readable/bootstrap.min.css',
+  'simplex'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/simplex/bootstrap.min.css',
+  'slate'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/slate/bootstrap.min.css',
+  'spacelab'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/spacelab/bootstrap.min.css',
+  'spruce'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/spruce/bootstrap.min.css',
+  'superhero'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/superhero/bootstrap.min.css',
+  'united'='http://netdna.bootstrapcdn.com/bootswatch/2.3.1/united/bootstrap.min.css'
 )
 
 code_styles = c(
-  'Default'='http://yandex.st/highlightjs/7.3/styles/default.min.css',
-  'Dark'='http://yandex.st/highlightjs/7.3/styles/dark.min.css',
-  'FAR'='http://yandex.st/highlightjs/7.3/styles/far.min.css',
-  'IDEA'='http://yandex.st/highlightjs/7.3/styles/idea.min.css',
-  'Sunburst'='http://yandex.st/highlightjs/7.3/styles/sunburst.min.css',
-  'Zenburn'='http://yandex.st/highlightjs/7.3/styles/zenburn.min.css',
-  'Visual Studio'='http://yandex.st/highlightjs/7.3/styles/vs.min.css',
-  'Ascetic'='http://yandex.st/highlightjs/7.3/styles/ascetic.min.css',
-  'Magula'='http://yandex.st/highlightjs/7.3/styles/magula.min.css',
-  'GitHub'='http://yandex.st/highlightjs/7.3/styles/github.min.css',
-  'Google Code'='http://yandex.st/highlightjs/7.3/styles/googlecode.min.css',
-  'Brown Paper'='http://yandex.st/highlightjs/7.3/styles/brown_paper.min.css',
-  'School Book'='http://yandex.st/highlightjs/7.3/styles/school_book.min.css',
-  'IR Black'='http://yandex.st/highlightjs/7.3/styles/ir_black.min.css',
-  'Solarized - Dark'='http://yandex.st/highlightjs/7.3/styles/solarized_dark.min.css',
-  'Solarized - Light'='http://yandex.st/highlightjs/7.3/styles/solarized_light.min.css',
-  'Arta'='http://yandex.st/highlightjs/7.3/styles/arta.min.css',
-  'Monokai'='http://yandex.st/highlightjs/7.3/styles/monokai.min.css',
-  'XCode'='http://yandex.st/highlightjs/7.3/styles/xcode.min.css',
-  'Pojoaque'='http://yandex.st/highlightjs/7.3/styles/pojoaque.min.css',
-  'Rainbow'='http://yandex.st/highlightjs/7.3/styles/rainbow.min.css',
-  'Tomorrow'='http://yandex.st/highlightjs/7.3/styles/tomorrow.min.css',
-  'Tomorrow Night'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night.min.css',
-  'Tomorrow Night Bright'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night-bright.min.css',
-  'Tomorrow Night Blue'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night-blue.min.css',
-  'Tomorrow Night Eighties'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night-eighties.min.css'
+  'default'='http://yandex.st/highlightjs/7.3/styles/default.min.css',
+  'dark'='http://yandex.st/highlightjs/7.3/styles/dark.min.css',
+  'far'='http://yandex.st/highlightjs/7.3/styles/far.min.css',
+  'idea'='http://yandex.st/highlightjs/7.3/styles/idea.min.css',
+  'sunburst'='http://yandex.st/highlightjs/7.3/styles/sunburst.min.css',
+  'zenburn'='http://yandex.st/highlightjs/7.3/styles/zenburn.min.css',
+  'visual studio'='http://yandex.st/highlightjs/7.3/styles/vs.min.css',
+  'ascetic'='http://yandex.st/highlightjs/7.3/styles/ascetic.min.css',
+  'magula'='http://yandex.st/highlightjs/7.3/styles/magula.min.css',
+  'github'='http://yandex.st/highlightjs/7.3/styles/github.min.css',
+  'google code'='http://yandex.st/highlightjs/7.3/styles/googlecode.min.css',
+  'brown paper'='http://yandex.st/highlightjs/7.3/styles/brown_paper.min.css',
+  'school book'='http://yandex.st/highlightjs/7.3/styles/school_book.min.css',
+  'ir black'='http://yandex.st/highlightjs/7.3/styles/ir_black.min.css',
+  'solarized - dark'='http://yandex.st/highlightjs/7.3/styles/solarized_dark.min.css',
+  'solarized - light'='http://yandex.st/highlightjs/7.3/styles/solarized_light.min.css',
+  'arta'='http://yandex.st/highlightjs/7.3/styles/arta.min.css',
+  'monokai'='http://yandex.st/highlightjs/7.3/styles/monokai.min.css',
+  'xcode'='http://yandex.st/highlightjs/7.3/styles/xcode.min.css',
+  'pojoaque'='http://yandex.st/highlightjs/7.3/styles/pojoaque.min.css',
+  'rainbow'='http://yandex.st/highlightjs/7.3/styles/rainbow.min.css',
+  'tomorrow'='http://yandex.st/highlightjs/7.3/styles/tomorrow.min.css',
+  'tomorrow night'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night.min.css',
+  'tomorrow night bright'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night-bright.min.css',
+  'tomorrow night blue'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night-blue.min.css',
+  'tomorrow night eighties'='http://yandex.st/highlightjs/7.3/styles/tomorrow-night-eighties.min.css'
 )
