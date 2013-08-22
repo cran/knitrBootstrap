@@ -1,9 +1,5 @@
 
-## @knitr include=FALSE
-library(knitr);render_html()
-
-
-## @knitr 2d_data
+## ----2d_data-------------------------------------------------------------
 #for the dataset
 data('mtcars')
 mcor <-cor(mtcars)
@@ -11,17 +7,17 @@ mcor <-cor(mtcars)
 round(mcor,digits=2)
 
 
-## @knitr 2d_xtable, results='asis'
+## ----2d_xtable, results='asis'-------------------------------------------
 library(xtable)
 print(xtable(mcor), type='html', comment=F)
 
 
-## @knitr 2d_plot, dev='png', warning=FALSE
+## ----2d_plot, dev='png', warning=FALSE-----------------------------------
 library(corrplot)
 corrplot(mcor)
 
 
-## @knitr 2d_network_data, dev='png'
+## ----2d_network_data, dev='png'------------------------------------------
 library(igraph)
 # Specify edges for a directed graph
 gd <-graph(c(1,2, 2,3, 2,4, 1,4, 5,5, 3,6))
