@@ -11,11 +11,6 @@
   text-transform: capitalize;
 }
 
-/*fix for boostrap#3494*/
-.row-fluid.thumbnails .span5.thumbnail:nth-child(6n+1) { margin-left: 0px; }
-.row-fluid.thumbnails .span5.thumbnail:nth-child(4n+1) { margin-left: 0px; }
-.row-fluid.thumbnails .span5.thumbnail:nth-child(2n+1) { margin-left: 0px; }
-
 /* Sticky footer styles */
 * {
   margin:0;
@@ -47,16 +42,6 @@ body {
   text-align: center;
 }
 
-/* Tocify */
-
-#toc {
-  border-radius: 0px;
-  height:100%;
-  padding: 9px;
-  margin-right: -10px;
-  position: fixed;
-  width: 240px;
-}
 /* Top level subheader elements.  These are the first nested items underneath a header element. */
 .header li {
   font-size: 20px;
@@ -67,50 +52,111 @@ body {
     font-size: 12px;
 }
 
-.meny {
-  height: 100%;
+button.thumbnails {
+  margin-left:0px;
 }
 
-.meny-left.row-fluid {
-  margin-left: 0%;
+.mfp-image img{
+  background: white;
 }
-
-
-.meny-arrow {
-  position: absolute;
-  z-index: 10;
-
-  border: 10px solid transparent;
-
-  -webkit-transition: opacity 0.4s ease 0.4s; 
-     -moz-transition: opacity 0.4s ease 0.4s; 
-      -ms-transition: opacity 0.4s ease 0.4s; 
-       -o-transition: opacity 0.4s ease 0.4s; 
-          transition: opacity 0.4s ease 0.4s;
-}
-  .meny-left .meny-arrow {
-    left: 14px;
-    top: 50%;
-    margin-top: -16px;
-    border-left: 16px solid #AAA;
-  }
-  .meny-active .meny-arrow {
-    opacity: 0;
-
-    -webkit-transition: opacity 0.2s ease; 
-       -moz-transition: opacity 0.2s ease; 
-        -ms-transition: opacity 0.2s ease; 
-         -o-transition: opacity 0.2s ease; 
-            transition: opacity 0.2s ease;
-  }
-
-.row-fluid > div.contents.span12 {
-  margin-left: 0;
-}
-.navbar-inner > .pull-right {
-  padding-right: 20px;
-}
-
 .mfp-figure:after {
   background: white;
+}
+/*
+ * Side navigation
+ *
+ * Scrollspy and affixed enhanced navigation to highlight sections and secondary
+ * sections of docs content.
+ */
+
+/* By default it's not affixed in mobile views, so undo that */
+.sidebar.affix {
+  position: static;
+}
+
+/* First level of nav */
+.sidenav {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-top:    10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* All levels of nav */
+.sidebar .nav > li > a {
+  display: block;
+  padding: 5px 20px;
+}
+.sidebar .nav > li > a:hover,
+.sidebar .nav > li > a:focus {
+  text-decoration: none;
+  border-right: 1px solid;
+}
+.sidebar .nav > .active > a,
+.sidebar .nav > .active:hover > a,
+.sidebar .nav > .active:focus > a {
+  font-weight: bold;
+  background-color: transparent;
+  border-right: 1px solid;
+}
+
+/* Nav: second level (shown on .active) */
+.sidebar .nav .nav {
+  display: none; /* Hide by default, but at >768px, show it */
+  margin-bottom: 8px;
+}
+.sidebar .nav .nav > li > a {
+  padding-top:    3px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  font-size: 90%;
+}
+
+/* Show and affix the side nav when space allows it */
+@media screen and (min-width: 992px) {
+  .sidebar .nav > .active > ul {
+    display: block;
+  }
+  /* Widen the fixed sidebar */
+  .sidebar.affix,
+  .sidebar.affix-bottom {
+    width: 213px;
+  }
+  .sidebar.affix {
+    position: fixed; /* Undo the static from mobile first approach */
+    top: 30px;
+  }
+  .sidebar.affix-bottom {
+    position: absolute; /* Undo the static from mobile first approach */
+  }
+  .sidebar.affix-bottom .sidenav,
+  .sidebar.affix .sidenav {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+@media screen and (min-width: 1200px) {
+  /* Widen the fixed sidebar again */
+  .sidebar.affix-bottom,
+  .sidebar.affix {
+    width: 263px;
+  }
+}
+
+#toc {
+  padding: 10px 0px;
+  margin:0;
+  border:0;
+}
+
+
+.panel pre {
+  border-radius: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.panel pre code {
+  border-radius: 0;
 }
