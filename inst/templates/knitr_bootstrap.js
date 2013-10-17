@@ -1,6 +1,72 @@
+// Function to generate the dynamic table of contents
+jQuery.fn.generate_TOC = function () {
+  var base = $(this[0]);
+
+  var selectors = ['h1', 'h2', 'h3', 'h4'];
+
+  var last_ptr = [{}, {}, {}, {}];
+
+  var anchors = {};
+
+  generate_anchor = function (text) {
+    var test = text.replace(/\W/g, '_');
+
+    while(test in anchors){
+      //if no suffix, add one
+      if(test.match(/_\d+$/) === null){
+        test = test + "_2";
+      }
+      //else generate unique id for duplicates by adding one to the suffix
+      else {
+        test = test.replace(/_(\d+)$/, function(match, number){ var num=+number+1; return("_" + num) });
+      }
+    }
+    anchors[test]=1;
+    return(test);
+  }
+
+  $(selectors.join(',')).each(function () {
+    var heading = $(this);
+    var idx = selectors.indexOf(heading.prop('tagName').toLowerCase());
+    var itr = 0;
+
+    while (itr <= idx) {
+      if (jQuery.isEmptyObject(last_ptr[itr])) {
+        last_ptr[itr] = $('<ul>').addClass('nav');
+        if (itr === 0) {
+          base.append(last_ptr[itr])
+        } else {
+          if(last_ptr[itr-1].children('li').length === 0){
+            last_ptr[itr-1].append(last_ptr[itr]);
+          }
+          else {
+            last_ptr[itr - 1].children('li').last().append(last_ptr[itr]);
+          }
+        }
+      }
+      itr++;
+    }
+    var anchor = generate_anchor(heading.text());
+    heading.attr('id', anchor);
+    var a = $('<a>')
+    .text(heading.text())
+    .attr('href', '#' + anchor);
+
+  var li = $('<li>')
+    .append(a);
+
+  last_ptr[idx].append(li);
+  for (i = idx + 1; i < last_ptr.length; i++) {
+    last_ptr[i] = {};
+  }
+  });
+}
 /* run scripts when document is ready */
 $(function() {
   "use strict";
+
+  var $window = $(window);
+  var $body = $(document.body);
 
   document.title = $('h1').first().text();
 
@@ -28,7 +94,7 @@ $(function() {
   $('table').addClass('table table-striped table-bordered table-hover table-condensed');
 
   /* add toggle panel to rcode blocks */
-  $('div.rcode div').not('.rimage').each(function() {
+  $('div.source,div.output,div.message,div.warning,div.error').each(function() {
     var button = $('<h5 class="panel-title">+/- </h5>');
 
     if($(this).hasClass('source')){
@@ -51,39 +117,48 @@ $(function() {
       button.text(button.text() + 'Message');
       button.addClass('message');
       $(this).addClass('panel panel-info');
-    } else if($(this).hasClass('error')){
+    }
+    else if($(this).hasClass('warning')){
+      button.text(button.text() + 'Warning');
+      button.addClass('warning');
+      $(this).addClass('panel panel-warning');
+    }
+    else if($(this).hasClass('error')){
       button.text(button.text() + 'Error');
       button.addClass('error');
       $(this).addClass('panel panel-danger');
     }
     else {
-      console.log($(this));
+      //console.log($(this));
     }
     $(this).prepend($('<div class="panel-heading toggle" />').append(button));
   });
 
   /* give images a lightbox and thumbnail classes to allow lightbox and thumbnails TODO: make gallery if graphs are grouped */
-  $('div.rimage').each(function(){
-    var imgs = $(this).children('img');
+  $('div.rimage img').each(function(){
 
-    var source = $(this).prev('.source');
-    source.addClass('media-body');
+    //remove rimage div
+    $(this).unwrap();
 
-    $(this).add(source).wrapAll('<div class="media" />');
+    var a = $(this).
+      wrap('<a href=# class="media-object pull-left mfp-image thumbnail ' + thumbsize + '"></a>').
+      parent();
 
-    //remove div
-    $(this).remove();
-
-    //remove images
-    imgs.remove();
-
-    //add images before source
-    source.before(imgs);
-
-    //add wrapping links to images
-    imgs.wrap('<a href="#" class="media-object pull-left mfp-image thumbnail ' + thumbsize + '"></a>');
+    var sibs = a.prevUntil('div.rimage,div.media');
+    var div = $('<div class="media" />');
+    if(sibs.length != 0){
+      sibs.addClass('media-body');
+      //need to reverse order as prevUntil puts objects in the order it found them
+      $(sibs.get().reverse()).wrapAll(div).parent().prepend(a);
+    }
+    else {
+      a.wrap(div);
+    }
   });
 
+  $('div.chunk').addClass('media');
+
+  $('.rcode > .panel').addClass('media');
   /* Magnific Popup */
   $(".thumbnail").each(function(){
     $(this).magnificPopup({
@@ -138,6 +213,7 @@ $(function() {
               <li class="dropdown-header">Type</li>\
                 <li><a href="#" type="output" class="toggle-global">Output</a></li>\
                 <li><a href="#" type="message" class="toggle-global">Message</a></li>\
+                <li><a href="#" type="warning" class="toggle-global">Warning</a></li>\
                 <li><a href="#" type="error" class="toggle-global">Error</a></li>\
                 <li><a href="#" type="all-output" class="toggle-global">All</a></li>\
             </ul>\
@@ -165,7 +241,7 @@ $(function() {
       }
     }
     if(type == 'all-output'){
-      $('li a[type=output], li a[type=message], li a[type=error]').click();
+      $('li a[type=output], li a[type=message], li a[type=warning], li a[type=error]').click();
     }
     else {
       if($(this).closest('li').hasClass('active')){
@@ -186,7 +262,7 @@ $(function() {
     }
     else {
       imgs.parent().show();
-      imgs.slideDown();
+      imgs.show();
     }
     $(this).closest('li').toggleClass('active');
     return false;
@@ -197,18 +273,17 @@ $(function() {
   $('#wrap').append('<div id="push" />');
   var p = $('p:contains("Author:")');
   var last_p = p.filter(':last');
-  p.detach();
-  last_p.addClass('muted').attr('id','credit');
-  last_p.append('<p>styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap</a></p>');
+  last_p.addClass('text-muted').attr('id','credit');
+  last_p.append('<p>Styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap</a></p>');
+  last_p = last_p.wrap('<div id="footer"><div class="container">').parent().parent();
   last_p.appendTo("body");
-  last_p.wrap('<div id="footer">');
 
   $('.container > .row').prepend('<div class="col-md-3"><div id="toc" class="well sidebar sidenav affix hidden-print"/></div>');
 
   $('.contents').addClass('col-md-offset-3');
 
   /* table of contents */
-  $('#toc').tocify({extendPage: false});
+  $('#toc').generate_TOC();
 
   if(show_code){
     /* toggle source buttons pressed */
@@ -221,11 +296,11 @@ $(function() {
 
   if(show_output){
     /* toggle output buttons pressed */
-    $('li a[type=output], li a[type=message], li a[type=error], li a[type=all-output]').closest('li').addClass('active');
+    $('li a[type=output], li a[type=message], li a[type=warning], li a[type=error], li a[type=all-output]').closest('li').addClass('active');
   }
   else {
     /* hide output blocks */
-    $('div.output').hide();
+    $('div.output pre').hide();
   }
 
   if(show_figure){
@@ -240,4 +315,15 @@ $(function() {
   /* remove paragraphs with no content */
   $('p:empty').remove();
 
+  $body.scrollspy({
+    target: '.sidebar',
+  });
+
+
+  //TODO refresh on show/hide
+  $window.on('load', function () {
+    $body.scrollspy('refresh');
+  })
+
 });
+
