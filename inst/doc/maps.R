@@ -1,4 +1,3 @@
-
 ## ----maps_arrests, dev='png', fig.show='hold', warning=FALSE-------------
 library(ggplot2)
 crimes <- data.frame(state = tolower(rownames(USArrests)), USArrests)
@@ -12,5 +11,4 @@ ggplot(crimesm, aes(map_id = state)) + geom_map(aes(fill = value), map = states_
 great_lakes_states = c('michigan', 'illinois', 'ohio', 'wisconsin', 'indiana')
 great_lakes_map = subset(states_map, region %in% great_lakes_states)
 ggplot(subset(crimesm, state %in% great_lakes_states), aes(map_id = state)) + geom_map(aes(fill = value), map = great_lakes_map) + expand_limits(x=great_lakes_map$long, y=great_lakes_map$lat) + facet_wrap( ~ variable)
-
 

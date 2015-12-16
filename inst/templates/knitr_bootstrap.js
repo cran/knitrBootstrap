@@ -25,7 +25,8 @@ jQuery.fn.generate_TOC = function () {
     return(test);
   }
 
-  $(selectors.join(',')).each(function () {
+  $(selectors.join(',')).filter(function(index) { return $(this).parent().attr("id") != 'header'; }).each(function () {
+
     var heading = $(this);
     var idx = selectors.indexOf(heading.prop('tagName').toLowerCase());
     var itr = 0;
@@ -68,97 +69,18 @@ $(function() {
   var $window = $(window);
   var $body = $(document.body);
 
-  document.title = $('h1').first().text();
-
   /* size of thumbnails */
-  var thumbsize = "col-md-3";
 
-  var show_code = false;
-
-  var show_output = true;
-
-  var show_figure = true;
-
-  /* included languages */
-  var languages = [];
-
-  /* Using render_html, so add in code block */
-  $('pre.knitr').each(function(){
-    $(this).removeClass('knitr');
-    if($(this).find('code').length < 1){
-      $(this).wrapInner('<code class=' + $(this).attr('class') + '></code>');
-    }
-  });
+  var hidden_types = ['source']
+  var output_types = ['output', 'message', 'warning', 'error']
 
   /* style tables */
   $('table').addClass('table table-striped table-bordered table-hover table-condensed');
 
-  /* add toggle panel to rcode blocks */
-  $('div.source,div.output,div.message,div.warning,div.error').each(function() {
-    var button = $('<h5 class="panel-title">+/- </h5>');
-
-    if($(this).hasClass('source')){
-      var code_block = $(this).find('code');
-      var lang_type = code_block.attr('class');
-      button.text(button.text() + lang_type + ' Code');
-      button.addClass('source ' + lang_type);
-      languages[lang_type]=0;
-      code_block.each(function(i, e) {
-        hljs.highlightBlock(e);
-      });
-      $(this).addClass('panel panel-primary ' + lang_type);
-    }
-    else if($(this).hasClass('output')){
-      button.text(button.text() + 'Output');
-      button.addClass('output');
-      $(this).addClass('panel panel-success');
-    }
-    else if($(this).hasClass('message')){
-      button.text(button.text() + 'Message');
-      button.addClass('message');
-      $(this).addClass('panel panel-info');
-    }
-    else if($(this).hasClass('warning')){
-      button.text(button.text() + 'Warning');
-      button.addClass('warning');
-      $(this).addClass('panel panel-warning');
-    }
-    else if($(this).hasClass('error')){
-      button.text(button.text() + 'Error');
-      button.addClass('error');
-      $(this).addClass('panel panel-danger');
-    }
-    else {
-      //console.log($(this));
-    }
-    $(this).prepend($('<div class="panel-heading toggle" />').append(button));
+  $('pre code').each(function(i, e) {
+    hljs.highlightBlock(e);
   });
 
-  /* give images a lightbox and thumbnail classes to allow lightbox and thumbnails TODO: make gallery if graphs are grouped */
-  $('div.rimage img').each(function(){
-
-    //remove rimage div
-    $(this).unwrap();
-
-    var a = $(this).
-      wrap('<a href=# class="media-object pull-left mfp-image thumbnail ' + thumbsize + '"></a>').
-      parent();
-
-    var sibs = a.prevUntil('div.rimage,div.media');
-    var div = $('<div class="media" />');
-    if(sibs.length != 0){
-      sibs.addClass('media-body');
-      //need to reverse order as prevUntil puts objects in the order it found them
-      $(sibs.get().reverse()).wrapAll(div).parent().prepend(a);
-    }
-    else {
-      a.wrap(div);
-    }
-  });
-
-  $('div.chunk').addClass('media');
-
-  $('.rcode > .panel').addClass('media');
   /* Magnific Popup */
   $(".thumbnail").each(function(){
     $(this).magnificPopup({
@@ -172,145 +94,81 @@ $(function() {
     });
   });
 
-  /* add bootstrap classes */
-  $('body').wrapInner('<div class="container"><div class="row"><div class="contents">');
-
-  var create_language_links = function(){
-    var text='';
-    var language;
-    for(language in languages){
-      if(languages.hasOwnProperty(language)){
-        text += '<li><a href=# class="toggle-global source ' + language + '" type="source.' + language + '">' + language + '</a></li>\n';
-      }
+  function toggle_block(obj, show) {
+    var span = obj.find('span');
+    if(show === true){
+      span.removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+      obj.next('pre').slideDown();
     }
-    return text;
+    else {
+      span.removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+      obj.next('pre').slideUp();
+    }
   }
 
-  var navbar =
-  '<div class="navbar navbar-fixed-bottom navbar-inverse">\
-    <div class="container">\
-      <div class="navbar-header">\
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">\
-          <span class="icon-bar"></span>\
-          <span class="icon-bar"></span>\
-          <span class="icon-bar"></span>\
-        </button>\
-      </div>\
-      <div id="bottom-navbar" class="navbar-collapse collapse navbar-responsive-collapse">\
-        <ul class="nav navbar-nav navbar-right">\
-          <li class="nav"><p class="navbar-text">Toggle</p></li>\
-          <li class="dropup">\
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Code <b class="caret"></b></a>\
-            <ul class="dropdown-menu">\
-              <li class="dropdown-header">Languages</li>'
-              + create_language_links() +
-              '<li><a href="#" type="all-source" class="toggle-global">All</a></li>\
-            </ul>\
-          </li>\
-          <li class="dropup">\
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Output <b class="caret"></b></a>\
-            <ul class="dropdown-menu">\
-              <li class="dropdown-header">Type</li>\
-                <li><a href="#" type="output" class="toggle-global">Output</a></li>\
-                <li><a href="#" type="message" class="toggle-global">Message</a></li>\
-                <li><a href="#" type="warning" class="toggle-global">Warning</a></li>\
-                <li><a href="#" type="error" class="toggle-global">Error</a></li>\
-                <li><a href="#" type="all-output" class="toggle-global">All</a></li>\
-            </ul>\
-          </li>\
-          <li><a href="#" class="toggle-figure">Figures</a></li>\
-        </ul>\
-      </div><!-- /.nav-collapse -->\
-    </div><!-- /.container -->\
-  </div>';
-  /* add navbar */
-  $('.container').append(navbar);
+  function toggle_thumbnails(imgs, show){
+    if(show === true){
+      imgs.parents().show()
+      imgs.slideDown();
+    }
+    else {
+      imgs.slideUp(400, function(){ $(this).parent().hide(); });
+    }
+  }
+
+  function global_toggle(obj){
+    var type = obj.attr('type');
+    var show = !obj.parent('li').hasClass('active');
+    if(show === true){
+      obj.parent('li').addClass('active');
+    }
+    else{
+      obj.parent('li').removeClass('active');
+    }
+    if(type == 'figure'){
+      toggle_thumbnails($('.thumbnail img'), show);
+    }
+    else {
+      $('.toggle.' + type).each(function() { toggle_block($(this), show); });
+    }
+  }
 
   /* onclick toggle next code block */
   $('.toggle').click(function() {
-    $(this).next('pre').slideToggle();
-    return false;
-  });
+    var span = $(this).find('span');
+    toggle_block($(this), !span.hasClass('glyphicon-chevron-down'));
+    return false
+  })
 
   // global toggles
   $('.toggle-global').click(function(){
     var type = $(this).attr('type');
-    if(type == 'all-source'){
-      for(var language in languages){
-        $('li a[type="source.' + language + '"]').click();
+    if(type === 'all-source'){
+        $('li a.source').each(function() {
+          global_toggle($(this));
+        });
       }
-    }
-    if(type == 'all-output'){
-      $('li a[type=output], li a[type=message], li a[type=warning], li a[type=error]').click();
+    else if(type === 'all-output'){
+      $.each(output_types, function(i, val){
+        console.log(val);
+        global_toggle($('li a.' + val));
+      });
     }
     else {
-      if($(this).closest('li').hasClass('active')){
-        $('div.' + type).children('pre').slideUp();
-      }
-      else {
-        $('div.' + type).children('pre').slideDown();
-      }
+      console.log($(this));
+      global_toggle($(this));
     }
-    $(this).closest('li').toggleClass('active');
     return false;
   });
-  // global toggles figure, this is more complicated than just slideToggle because you have to hide the parent div as well
-  $('.toggle-figure').click(function(){
-    var imgs = $('.thumbnail img');
-    if(imgs.is(":visible")){
-      imgs.slideUp(400, function(){ $(this).parent().toggle(); });
-    }
-    else {
-      imgs.parent().show();
-      imgs.show();
-    }
-    $(this).closest('li').toggleClass('active');
-    return false;
-  });
-
-  /* add footer */
-  $('body').wrapInner('<div id="wrap" />');
-  $('#wrap').append('<div id="push" />');
-  var p = $('p:contains("Author:")');
-  var last_p = p.filter(':last');
-  last_p.addClass('text-muted').attr('id','credit');
-  last_p.append('<p>Styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap</a></p>');
-  last_p = last_p.wrap('<div id="footer"><div class="container">').parent().parent();
-  last_p.appendTo("body");
-
-  $('.container > .row').prepend('<div class="col-md-3"><div id="toc" class="well sidebar sidenav affix hidden-print"/></div>');
-
-  $('.contents').addClass('col-md-offset-3');
-
   /* table of contents */
-  $('#toc').generate_TOC();
-
-  if(show_code){
-    /* toggle source buttons pressed */
-    $('a.toggle-global.source').closest('li').addClass('active');
-  }
-  else {
-    /* hide code blocks */
-    $('div.source pre').hide();
+  if($(['h1', 'h2', 'h3', 'h4'].join(',')).length > 0){
+    $('body > #wrap > .container > .row').append('<div class="col-md-2"><div id="toc" class="well sidebar sidenav affix hidden-print"/></div>');
+    $('#toc').generate_TOC();
   }
 
-  if(show_output){
-    /* toggle output buttons pressed */
-    $('li a[type=output], li a[type=message], li a[type=warning], li a[type=error], li a[type=all-output]').closest('li').addClass('active');
-  }
-  else {
-    /* hide output blocks */
-    $('div.output pre').hide();
-  }
-
-  if(show_figure){
-    /* toggle figure button pressed */
-    $('li a.toggle-figure').closest('li').addClass('active');
-  }
-  else {
-    /* hide figures */
-    $('.thumbnail').hide();
-  }
+  $.each(hidden_types, function(i, type) {
+    $('li[type=' + type + ']').each(function(){ global_toggle($(this)); });
+  });
 
   /* remove paragraphs with no content */
   $('p:empty').remove();
@@ -319,6 +177,22 @@ $(function() {
     target: '.sidebar',
   });
 
+  /* theme switch */
+  $('.theme-switch').click(function(){
+    var css = $('link[title=' + $(this).attr('title') + ']');
+    $('#theme[rel=stylesheet]').attr('href', css.attr('href'));
+    $('.theme-switch').closest('li').removeClass('active');
+    $(this).closest('li').addClass('active');
+    return false;
+  });
+  /* code style switch */ //TODO use same function for both of these?
+  $('.highlight-switch').click(function(){
+    var css = $('link[title="' + $(this).attr('title') + '"]');
+    $('#highlight[rel=stylesheet]').attr('href', css.attr('href'));
+    $('.highlight-switch').closest('li').removeClass('active');
+    $(this).closest('li').addClass('active');
+    return false;
+  });
 
   //TODO refresh on show/hide
   $window.on('load', function () {
