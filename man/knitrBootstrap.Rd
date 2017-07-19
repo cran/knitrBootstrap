@@ -25,4 +25,3 @@ render('input.Rmd', bootstrap_document(title='Test', highlight='Github',
   theme='Slate', theme.chooser=TRUE, highlight.chooser=TRUE))
 }
 }
-

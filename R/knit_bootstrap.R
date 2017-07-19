@@ -209,8 +209,8 @@ pandoc = function(input=NULL, output, header) {
 #' to include.
 #' @param custom.header HTML file containing any extra header logic such as
 #' external script or CSS includes.
-#' @param menu Whether to use a toggle menu, [logical(TRUE)].
-#' @param clean_supporting Whether to clean the supporting files, [logical(TRUE)].
+#' @param menu Whether to show the menu or not.
+#' @param clean_supporting Whether to clean supporting files or not.
 #' @seealso \code{\link[rmarkdown]{render}}
 #' @export
 bootstrap_document = function(title=NULL, theme='default', highlight='highlightjs', theme.chooser=FALSE,
@@ -571,7 +571,7 @@ bootstrap_pandoc_options = paste0('markdown',
 #' @export
 render_bootstrap = function() {
   knit_hooks$restore()
-  (get(envir = asNamespace("knitr"), "set_html_dev"))()
+  (get("knitr", "set_html_dev"))()
   knitr::opts_knit$set(out.format = "html")
   knit_hooks$set(render_bootstrap_hooks())
 }

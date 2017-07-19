@@ -26,9 +26,9 @@ qplot(hp, mpg, data=mtcars, shape=am, color=am,
    xlab="Horsepower", ylab="Miles per Gallon")
 
 ## ----cars_regressions, dev='png', warning=FALSE--------------------------
-ggplot(data = mtcars, aes(x = wt, y = mpg, color = cyl)) + geom_point() +
-  geom_smooth(method="lm") +
-  labs(main="Regression of MPG on Weight",
+qplot(wt, mpg, data=mtcars, geom=c("point", "smooth"),
+   method="lm", formula=y~x, color=cyl,
+   main="Regression of MPG on Weight",
    xlab="Weight", ylab="Miles per Gallon")
 
 ## ----cars_boxplots, dev='png', warning=FALSE-----------------------------

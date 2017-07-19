@@ -16,4 +16,3 @@ rmarkdown package.  Note you still need to use pandoc to generate the HTML
 document, as the sundown library in the markdown package cannot handle
 markdown embedded in HTML tags, which knitr bootstrap uses.
 }
-

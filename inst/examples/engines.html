@@ -27,10 +27,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/0.8.9/jquery.magnific-popup.min.js"></script>
   
   <script type="text/javascript"
-    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
-  <script defer="defer">
-  // Function to generate the dynamic table of contents
+    src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script><script defer="defer">// Function to generate the dynamic table of contents
   jQuery.fn.generate_TOC = function () {
     var base = $(this[0]);
   
@@ -140,11 +138,11 @@
   
     function toggle_thumbnails(imgs, show){
       if(show === true){
-        imgs.parents().show()
-        imgs.slideDown();
+        imgs.parent().show();
+        imgs.show();
       }
       else {
-        imgs.slideUp(400, function(){ $(this).parent().hide(); });
+        img.slideUp(400, function(){ img.parent().hide(); });
       }
     }
   
@@ -167,8 +165,9 @@
   
     /* onclick toggle next code block */
     $('.toggle').click(function() {
-      var span = $(this).find('span');
-      toggle_block($(this), !span.hasClass('glyphicon-chevron-down'));
+      var span = $(this).find('span')
+      console.log(span.hasClass('glyphicon-chevron-down'))
+      toggle_block($(this), !span.hasClass('glyphicon-chevron-down'))
       return false
     })
   
@@ -187,7 +186,6 @@
         });
       }
       else {
-        console.log($(this));
         global_toggle($(this));
       }
       return false;
@@ -232,10 +230,7 @@
     })
   
   });
-  
-  </script>
-  <style>
-  /* Knitr_bootstrap styles */
+  </script><style>/* Knitr_bootstrap styles */
   #header {
     display: none !important;
     visibility: hidden !important;
@@ -396,14 +391,8 @@
   
   .panel pre {
     margin: 0;
-    padding: 0;
-    border: 0;
   }
-  button + pre {
-    margin: 0;
-    padding: 0;
-  }
-  pre code {
+  .panel pre code {
     border-radius: 0;
   }
   /* Magnific Popup CSS */
@@ -809,70 +798,16 @@
   }
   .mfp-figure:after {
     background: white;
-  }
-  
-  /*
-   * Off Canvas navbar toggle right
-   * --------------------------------------------------
-   */
-  
-  @media screen and (max-width: 768px) {
-    .row-offcanvas .collapsing {
-    -webkit-transition: none 0;
-      -moz-transition: none 0;
-      transition: none 0;
-    }
-   .row-offcanvas .navbar {
-    position: absolute;
-    z-index: 2;
-      right:0;
-      height:100%;
-      width:55px;
-      border:0;
-      background-color:transparent;
-    }
-    .row-offcanvas .navbar-toggle {
-      margin-right: 5px;
-      margin-left: 5px;
-    }
-    .row-offcanvas {
-      position: relative;
-    }
-    .row-offcanvas-right.active .navbar {
-    position: absolute;
-    z-index: 2;
-      right: -28.4%;
-      width:40%;
-      background-color:#eee;
-      border:0 solid #ddd;
-      border-left-width:1px;
-    }
-    .row-offcanvas-right.active {
-      left: -30%;
-    }
-    .row-offcanvas-right.active .navbar-collapse {
-      position: relative;
-      width: 100%;
-    }
-    .row-offcanvas .content {
-    /*width:calc(100% - 60px);*/
-    }
-  }
-  </style>
+  }</style>
 </head>
 <body>
-<div id="wrap">
-<div class="container">
-<div class="row row-offcanvas row-offcanvas-right">
-<div class="contents col-xs-12 col-md-10">
+<div id="wrap"><div class="container"><div class="row"><div class="contents col-md-10">
 <h1 id="other-languages">Other Languages</h1>
 <p>Syntax examples taken from <a href="">http://softwaremaniacs.org/media/soft/highlight/test.html</a>.</p>
 <h2 id="r">R</h2>
-<div class="row">
-<button class="source R toggle btn btn-xs btn-primary">
+<div class="row"><button class="source R toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> R source
-</button>
-<pre style=""><code class="source r">library(ggplot2)
+</button><pre style=""><code class="source r">library(ggplot2)
 
 centre <- function(x, type, ...) {
   switch(type,
@@ -939,14 +874,12 @@ For If In Else Next Break .. .... "NULL" `NULL` 'NULL'
 # infix operator
 foo %union% bar
 %"test"%
-`"test"`</code></pre>
-</div>
+`"test"`</code></pre></div>
+
 <h2 id="bash">Bash</h2>
-<div class="row">
-<button class="source bash toggle btn btn-xs btn-primary">
+<div class="row"><button class="source bash toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> bash source
-</button>
-<pre style=""><code class="source bash">#!/bin/bash
+</button><pre style=""><code class="source bash">#!/bin/bash
 
 ###### BEGIN CONFIG
 ACCEPTED_HOSTS="/root/.hag_accepted.conf"
@@ -975,14 +908,13 @@ genApacheConf(){
  fi
  host_root="${APACHE_HOME_DIR}$1/$2"
  echo -e "# Host $1/$2 :"
-}</code></pre>
-</div>
+}</code></pre></div>
+
 <h2 id="perl">Perl</h2>
 <div class="row">
 <button class="source perl toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> perl source
-</button>
-<pre style=""><code class="source perl"># loads object
+</button><pre style=""><code class="source perl"># loads object
 sub load
 {
   my $flds = $c->db_load($id,@_) || do {
@@ -1008,14 +940,13 @@ sub load
 }
 
 =head1 NAME
-POD till the end of file</code></pre>
-</div>
-<h2 id="ruby">Ruby</h2>
+POD till the end of file</code></pre></div>
+
+<h2>Ruby</h2>
 <div class="row">
 <button class="source ruby toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> ruby source
-</button>
-<pre style=""><code class="source ruby">class A < B; def self.create(object = User) object end end
+</button><pre style=""><code class="source ruby">class A < B; def self.create(object = User) object end end
 class Zebra; def inspect; "X#{2 + self.object_id}" end end
 
 module ABC::DEF
@@ -1035,14 +966,13 @@ end
 
 anIdentifier = an_identifier
 Constant = 1
-render action: :new</code></pre>
-</div>
-<h2 id="python">Python</h2>
+render action: :new</code></pre></div>
+
+<h2>Python</h2>
 <div class="row">
 <button class="source python toggle btn btn-xs btn-primary">
 <span class="glyphicon glyphicon-chevron-down"></span> python source
-</button>
-<pre style=""><code class="source python">@requires_authorization
+</button><pre style=""><code class="source python">@requires_authorization
 def somefunc(param1='', param2=0):
     r'''A docstring'''
     if param1 > param2: # interesting
@@ -1053,199 +983,175 @@ def somefunc(param1='', param2=0):
             pass
 
         >>> message = '''interpreter
-        ... prompt'''</code></pre>
-</div>
+        ... prompt'''</code></pre></div>
+
 Author: <a href="http://jimhester.com">Jim Hester</a> Created: 2013 Apr 23 09:05:58 AM Last Modified: 2014 Mar 13 01:45:32 PM
 </div>
 </div>
-<div class="navbar navbar-fixed-bottom navbar-inverse">
-<div class="container">
-<div class="navbar-header">
-<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-</button>
 </div>
-<div id="bottom-navbar" class="navbar-collapse collapse navbar-responsive-collapse">
-<ul class="nav navbar-nav navbar-right">
-<li class="nav">
-<p class="navbar-text">
+<div class="navbar navbar-fixed-bottom navbar-inverse">
+<div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+</button></div>
+<div id="bottom-navbar" class="navbar-collapse collapse navbar-responsive-collapse"><ul class="nav navbar-nav navbar-right"><li class="nav"><p class="navbar-text">
 Toggle
-</p>
-</li>
+</p></li>
 <li class="dropup">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Code <b class="caret"></b></a>
-<ul class="dropdown-menu">
-<li class="dropdown-header">
+<ul class="dropdown-menu"><li class="dropdown-header">
 Languages
 </li>
-<li class="active">
+<li >
 <a href="#" class="toggle-global source R" type="source.R">R</a>
 </li>
-<li class="active">
+<li >
 <a href="#" class="toggle-global source bash" type="source.bash">bash</a>
 </li>
-<li class="active">
+<li >
 <a href="#" class="toggle-global source perl" type="source.perl">perl</a>
 </li>
-<li class="active">
+<li >
 <a href="#" class="toggle-global source ruby" type="source.ruby">ruby</a>
 </li>
-<li class="active">
+<li >
 <a href="#" class="toggle-global source python" type="source.python">python</a>
 </li>
-<li>
+<li >
 <a href="#" type="all-source" class="toggle-global">All</a>
-</li>
-</ul>
-</li>
-<li class="active">
-<a href="#" type="figure" class="toggle-global">Figures</a>
-</li>
-</ul>
-<ul class="nav navbar-nav navbar-left">
-<li class="dropup">
+</li></ul></li>
+
+<li >
+<a href="#" class="toggle-figure">Figures</a>
+</li></ul>
+<ul class="nav navbar-nav navbar-left"><li class="dropup">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Bootstrap theme <b class="caret"></b></a>
-<ul class="dropdown-menu">
-<li class="active">
+<ul class="dropdown-menu"><li class="active">
 <a class="theme-switch" title="Default" href="#">Default</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Amelia" href="#">Amelia</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Cerulean" href="#">Cerulean</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Cosmo" href="#">Cosmo</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Cyborg" href="#">Cyborg</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Journal" href="#">Journal</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Flatly" href="#">Flatly</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Readable" href="#">Readable</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Simplex" href="#">Simplex</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Slate" href="#">Slate</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="Spacelab" href="#">Spacelab</a>
 </li>
-<li>
+<li >
 <a class="theme-switch" title="United" href="#">United</a>
-</li>
-</ul>
-</li>
-</ul>
-<ul class="nav navbar-nav navbar-left">
-<li class="dropup">
+</li></ul></li></ul>
+<ul class="nav navbar-nav navbar-left"><li class="dropup">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Code highlighting <b class="caret"></b></a>
-<ul class="dropdown-menu">
-<li class="active">
+<ul class="dropdown-menu"><li class="active">
 <a class="highlight-switch" title="HighlightJs" href="#">HighlightJs</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Dark" href="#">Dark</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Far" href="#">Far</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Idea" href="#">Idea</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Sunburst" href="#">Sunburst</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Zenburn" href="#">Zenburn</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Visual Studio" href="#">Visual Studio</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Ascetic" href="#">Ascetic</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Magula" href="#">Magula</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Github" href="#">Github</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Google Code" href="#">Google Code</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Brown Paper" href="#">Brown Paper</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="School Book" href="#">School Book</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="IR Black" href="#">IR Black</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Solarized - Dark" href="#">Solarized - Dark</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Solarized - Light" href="#">Solarized - Light</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Arta" href="#">Arta</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Monokai" href="#">Monokai</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Xcode" href="#">Xcode</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Pojoaque" href="#">Pojoaque</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Rainbow" href="#">Rainbow</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Tomorrow" href="#">Tomorrow</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Tomorrow Night" href="#">Tomorrow Night</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Tomorrow Night Bright" href="#">Tomorrow Night Bright</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Tomorrow Night Blue" href="#">Tomorrow Night Blue</a>
 </li>
-<li>
+<li >
 <a class="highlight-switch" title="Tomorrow Night Eighties" href="#">Tomorrow Night Eighties</a>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-</div>
+</li></ul></li></ul></div></div></div>
 <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" title="Default" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/amelia/bootstrap.min.css" title="Amelia" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/cerulean/bootstrap.min.css" title="Cerulean" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/cosmo/bootstrap.min.css" title="Cosmo" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/cyborg/bootstrap.min.css" title="Cyborg" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/journal/bootstrap.min.css" title="Journal" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css" title="Flatly" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/readable/bootstrap.min.css" title="Readable" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/simplex/bootstrap.min.css" title="Simplex" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/slate/bootstrap.min.css" title="Slate" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css" title="Spacelab" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootswatch/3.0.0/united/bootstrap.min.css" title="United" media="screen"></link><link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css" title="HighlightJs" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/dark.min.css" title="Dark" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/far.min.css" title="Far" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/idea.min.css" title="Idea" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/sunburst.min.css" title="Sunburst" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/zenburn.min.css" title="Zenburn" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/vs.min.css" title="Visual Studio" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/ascetic.min.css" title="Ascetic" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/magula.min.css" title="Magula" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/github.min.css" title="Github" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/googlecode.min.css" title="Google Code" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/brown_paper.min.css" title="Brown Paper" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/school_book.min.css" title="School Book" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/ir_black.min.css" title="IR Black" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/solarized_dark.min.css" title="Solarized - Dark" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/solarized_light.min.css" title="Solarized - Light" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/arta.min.css" title="Arta" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/monokai.min.css" title="Monokai" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/xcode.min.css" title="Xcode" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/pojoaque.min.css" title="Pojoaque" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/rainbow.min.css" title="Rainbow" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/tomorrow.min.css" title="Tomorrow" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/tomorrow-night.min.css" title="Tomorrow Night" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/tomorrow-night-bright.min.css" title="Tomorrow Night Bright" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/tomorrow-night-blue.min.css" title="Tomorrow Night Blue" media="screen"></link> <link rel="alternate stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/tomorrow-night-eighties.min.css" title="Tomorrow Night Eighties" media="screen"></link>
 </div>
 <div id="push">
 
 </div>
-<div id="footer">
-<div class="container">
-<p class="text-muted" id="credit">
+<div id="footer"><div class="container"><p class="text-muted" id="credit">
 Styled with <a href="https://github.com/jimhester/knitrBootstrap">knitrBootstrap</a>
-</p>
-</div>
-</div>
-<link rel="stylesheet" id="theme" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" media="screen"></link><link rel="stylesheet" id="highlight" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css" media="screen"></link>
+</p></div></div>
+<p><link rel="stylesheet" id="theme" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" media="screen"></link><link rel="stylesheet" id="highlight" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css" media="screen"></link></p>
+<div class="references">
+
 </div>
 </body>
 </html>

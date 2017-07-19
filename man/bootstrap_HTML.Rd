@@ -15,4 +15,3 @@ bootstrap_HTML(input, output = NULL)
 This function includes the knitrBootstrap HTML headers to wrap the knitr
 output in bootstrap styled HTML.
 }
-

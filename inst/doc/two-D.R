@@ -13,7 +13,7 @@ print(xtable(mcor), type='html', comment=F)
 library(corrplot)
 corrplot(mcor)
 
-## ----2d_network_data, dev='png'------------------------------------------
+## ----2d_network_data, dev='png', error = TRUE----------------------------
 library(igraph)
 # Specify edges for a directed graph
 gd <-graph(c(1,2, 2,3, 2,4, 1,4, 5,5, 3,6))

@@ -22,4 +22,3 @@ output in bootstrap styled HTML.
 \seealso{
 \code{\link{knit_bootstrap_md}}
 }
-

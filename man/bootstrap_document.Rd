@@ -29,12 +29,12 @@ to include.}
 \item{highlight.chooser}{Adds a dynamic highlight chooser to the page, pass `TRUE`
 to include.}
 
-\item{menu}{Whether to use a toggle menu, [logical(TRUE)].}
+\item{menu}{Whether to show the menu or not.}
 
 \item{custom.header}{HTML file containing any extra header logic such as
 external script or CSS includes.}
 
-\item{clean_supporting}{Whether to clean the supporting files, [logical(TRUE)].}
+\item{clean_supporting}{Whether to clean supporting files or not.}
 }
 \description{
 rmarkdown Format for converting from R markdown to Bootstrap styled HTML
@@ -42,4 +42,3 @@ rmarkdown Format for converting from R markdown to Bootstrap styled HTML
 \seealso{
 \code{\link[rmarkdown]{render}}
 }
-

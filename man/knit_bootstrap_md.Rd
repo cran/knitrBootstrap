@@ -20,4 +20,3 @@ output in bootstrap styled HTML.
 \code{\link{knit_bootstrap}} \code{\link{knit}},
          \code{\link[markdown]{markdownToHTML}}
 }
-
