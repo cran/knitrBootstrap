@@ -1,5 +1,5 @@
 Package: knitrBootstrap
-Version: 1.0.1
+Version: 1.0.2
 Maintainer: Jim Hester <james.f.hester@gmail.com>
 Author: Jim Hester
 Title: 'knitr' Bootstrap Framework
@@ -15,6 +15,6 @@ BugReports: https://github.com/jimhester/knitrBootstrap/issues
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-07-19 17:02:28 UTC; jhester
+Packaged: 2018-05-24 18:09:05 UTC; jhester
 Repository: CRAN
-Date/Publication: 2017-07-19 18:00:24 UTC
+Date/Publication: 2018-05-24 18:20:07 UTC
