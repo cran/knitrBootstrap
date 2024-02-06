@@ -1,19 +1,19 @@
-## ----2d_data-------------------------------------------------------------
+## ----2d_data------------------------------------------------------------------
 #for the dataset
 data('mtcars')
 mcor <-cor(mtcars)
 # Print mcor and round to 2 digits
 round(mcor,digits=2)
 
-## ----2d_xtable, results='asis'-------------------------------------------
+## ----2d_xtable, results='asis'------------------------------------------------
 library(xtable)
 print(xtable(mcor), type='html', comment=F)
 
-## ----2d_plot, dev='png', warning=FALSE-----------------------------------
+## ----2d_plot, dev='png', warning=FALSE----------------------------------------
 library(corrplot)
 corrplot(mcor)
 
-## ----2d_network_data, dev='png', error = TRUE----------------------------
+## ----2d_network_data, dev='png', error = TRUE---------------------------------
 library(igraph)
 # Specify edges for a directed graph
 gd <-graph(c(1,2, 2,3, 2,4, 1,4, 5,5, 3,6))

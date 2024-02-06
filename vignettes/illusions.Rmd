@@ -12,9 +12,9 @@ output:
 -->
 
 # Illusions #
-The R implementations for these are from Kohske Takahashi[(@kohske)](https://twitter.com/kohske).
+The R implementations for these are from Kohske Takahashi (@kohske).
 See http://rpubs.com/kohske/R-de-illusion
-from [statmethods.net](http://www.statmethods.net/advgraphs/ggplot2.html)
+from [statmethods.net](https://www.statmethods.net/advgraphs/ggplot2.html)
 
 ## Cafe wall illusion ##
 All the lines are actually parallel.

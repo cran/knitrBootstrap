@@ -8,7 +8,7 @@
   Rmarkdown.
 Knitr Bootstrap includes a \code{\link{bootstrap_document}} custom
 rendering function for use with the rmarkdown
-\url{http://rmarkdown.rstudio.com/}) package.}
+\url{https://rmarkdown.rstudio.com/}) package.}
 \description{
 You can also specify the options in your YAML front-matter, see the
 rmarkdown documentation for examples.

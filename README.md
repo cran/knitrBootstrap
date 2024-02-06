@@ -59,7 +59,7 @@ install.packages('knitrBootstrap')
 
 Knitr Bootstrap includes a `knitrBootstrap::bootstrap_document` custom
 rendering function for use with the
-[Rmarkdown](http://rmarkdown.rstudio.com/) package.
+[Rmarkdown](https://rmarkdown.rstudio.com/) package.
 
 ### RStudio ###
 Very current versions of RStudio use the `render` function when you press the
@@ -139,7 +139,7 @@ make file_inline.html
 ## Options ##
 
 Knitr bootstrap extends [knitr] with a number of additional options.  See
-[Knitr Options](http://yihui.name/knitr/options) for more about how to set the
+[Knitr Options](https://yihui.org/knitr/options) for more about how to set the
 two different types of options.
 
 ### Package Options ###
@@ -154,7 +154,7 @@ two different types of options.
 
 ### Chunk Options ###
 - `bootstrap.thumbnail` - (`TRUE`) - Thumbnail and lightbox images.
-- `bootstrap.thumbnail.size` - (`'col-md-6'`) - Thumbnail size in bootstrap columns. (see [Bootstrap Grid System](http://getbootstrap.com/css/#grid))
+- `bootstrap.thumbnail.size` - (`'col-md-6'`) - Thumbnail size in bootstrap columns. (see [Bootstrap Grid System](https://getbootstrap.com/css/))
 - `bootstrap.panel` - (`FALSE`) - Use panels rather than buttons to toggle blocks.
 - `bootstrap.show.code` - (`TRUE`) - Code from this chunk starts as shown.
 - `bootstrap.show.output` - (`TRUE`) - Output from this chunk starts as shown.
@@ -164,17 +164,17 @@ two different types of options.
 - `bootstrap.class` - (`'row'`) - Bootstrap class to apply to the div containing the chunk.
 
 ## Bootstrap Themes ##
-- [Themes](http://bootswatch.com)
-- [Default](http://bootswatch.com/default)
-- [Cerulean](http://bootswatch.com/cerulean)
-- [Cosmo](http://bootswatch.com/cosmo)
-- [Cyborg](http://bootswatch.com/cyborg)
-- [Journal](http://bootswatch.com/journal)
-- [Flatly](http://bootswatch.com/flatly)
-- [Simplex](http://bootswatch.com/simplex)
-- [Slate](http://bootswatch.com/slate)
-- [Spacelab](http://bootswatch.com/spacelab)
-- [United](http://bootswatch.com/united)
+- [Themes](https://bootswatch.com/)
+- [Default](https://bootswatch.com/default/)
+- [Cerulean](https://bootswatch.com/cerulean/)
+- [Cosmo](https://bootswatch.com/cosmo/)
+- [Cyborg](https://bootswatch.com/cyborg/)
+- [Journal](https://bootswatch.com/journal/)
+- [Flatly](https://bootswatch.com/flatly/)
+- [Simplex](https://bootswatch.com/simplex/)
+- [Slate](https://bootswatch.com/slate/)
+- [Spacelab](https://bootswatch.com/spacelab/)
+- [United](https://bootswatch.com/united/)
 
 ## Highlight Themes ##
 [Highlight Live Test](http://highlightjs.org/static/test.html)
@@ -205,21 +205,21 @@ two different types of options.
 - Tomorrow Night Blue
 - Tomorrow Night Eighties
 
-[highlight.js]: https://github.com/isagalaev/highlight.js
+[highlight.js]: https://github.com/highlightjs/highlight.js
 [rstudio/markdown]: https://github.com/rstudio/markdown
 [knitrBootstrap]: https://jimhester.github.io/knitrBootstrap
-[magnific popup]: http://dimsemenov.com/plugins/magnific-popup
+[magnific popup]: https://dimsemenov.com/plugins/magnific-popup/
 [mathjax]: http://mathjax.org
-[bootswatch]: http://bootswatch.com
-[devtools]: https://github.com/hadley/devtools
+[bootswatch]: https://bootswatch.com/
+[devtools]: https://github.com/r-lib/devtools
 [knitr]: https://github.com/yihui/knitr
 [knitr (devel)]: https://github.com/yihui/knitr
 [rmarkdown]: https://github.com/rstudio/rmarkdown
 
-[2d]: http://rawgithub.com/jimhester/knitrBootstrap/master/vignettes/two-D.html
-[all]: http://rawgithub.com/jimhester/knitrBootstrap/master/inst/examples/all.html
-[cars]: http://rawgithub.com/jimhester/knitrBootstrap/master/vignettes/cars.html
-[engines]: http://rawgithub.com/jimhester/knitrBootstrap/master/inst/examples/engines.html
-[illusions]: http://rawgithub.com/jimhester/knitrBootstrap/master/vignettes/illusions.html
-[maps]: http://rawgithub.com/jimhester/knitrBootstrap/master/vignettes/maps.html
-[math]: http://rawgithub.com/jimhester/knitrBootstrap/master/vignettes/math.html
+[2d]: https://rawgit.com/jimhester/knitrBootstrap/master/vignettes/two-D.html
+[all]: https://rawgit.com/jimhester/knitrBootstrap/master/inst/examples/all.html
+[cars]: https://rawgit.com/jimhester/knitrBootstrap/master/vignettes/cars.html
+[engines]: https://rawgit.com/jimhester/knitrBootstrap/master/inst/examples/engines.html
+[illusions]: https://rawgit.com/jimhester/knitrBootstrap/master/vignettes/illusions.html
+[maps]: https://rawgit.com/jimhester/knitrBootstrap/master/vignettes/maps.html
+[math]: https://rawgit.com/jimhester/knitrBootstrap/master/vignettes/math.html

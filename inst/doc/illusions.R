@@ -1,4 +1,4 @@
-## ----illusions_cafe_wall-------------------------------------------------
+## ----illusions_cafe_wall------------------------------------------------------
 library(grid)
 rs <- expand.grid(x = seq(0, 1, 1/10), y = seq(0, 1, 1/10))
 grid.rect(rs$x, rs$y, 1/10/2, 1/10/2, gp = gpar(fill = "black", col = NA))
@@ -6,7 +6,7 @@ grid.rect(rs$x + 1/10/4, rs$y + 1/10/2, 1/10/2, 1/10/2, gp = gpar(fill = "black"
 ls <- expand.grid(x = 0:1, y = seq(0, 1, 1/20) - 1/20/2)
 grid.polyline(ls$x, ls$y, id = gl(nrow(ls)/2, 2), gp = gpar(col = "grey50", lwd = 1))
 
-## ----illusions_ouchi-----------------------------------------------------
+## ----illusions_ouchi----------------------------------------------------------
 grid.newpage()
 nx <- 10; ny <- 30
 rs <- expand.grid(x = seq(0, 1, 1/nx/2), y = seq(0, 1, 1/ny/2))
@@ -14,7 +14,7 @@ grid.rect(rs$x, rs$y, 1/nx/2, 1/ny/2, gp = gpar(col = NA, fill = c("black", "whi
 rs <- expand.grid(x = seq(0.25, 0.75, 1/nx/2), y = seq(0.25, 0.75, 1/ny/2))
 grid.rect(rs$y, rs$x, 1/ny/2, 1/nx/2, gp = gpar(col = NA, fill = c("black", "white")))
 
-## ----illusions_fraser----------------------------------------------------
+## ----illusions_fraser---------------------------------------------------------
 library(plyr)
 grid.newpage()
 n <- 10; ny <- 8; L <- 0.01; c <- seq(0, 1, length = n); d <- 1.2*diff(c)[1]/2
@@ -36,7 +36,7 @@ l_ply(1:ny, function(i) {n
   grid.polygon(w, rep(z, each = n) + ys[i], id = rep(1:n, 4), gp = gpar(fill = rev(co), col = NA))
 })
 
-## ----illusions_fraser_wilcox---------------------------------------------
+## ----illusions_fraser_wilcox--------------------------------------------------
 grid.newpage()
 No <- 3
 wo <- 1/3/2
@@ -61,7 +61,7 @@ for (y0 in seq(0, 1, len = 10)) {
   }
 }
 
-## ----illusions_parallel_lines--------------------------------------------
+## ----illusions_parallel_lines-------------------------------------------------
 x=1:100
 y=1/log10(x)
 y2=y+.2

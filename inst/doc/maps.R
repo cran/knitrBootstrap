@@ -1,4 +1,4 @@
-## ----maps_arrests, dev='png', fig.show='hold', warning=FALSE-------------
+## ----maps_arrests, dev='png', fig.show='hold', warning=FALSE------------------
 library(ggplot2)
 crimes <- data.frame(state = tolower(rownames(USArrests)), USArrests)
 library(reshape2) # for melt

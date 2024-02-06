@@ -11,7 +11,7 @@ output:
 -->
 
 # Math expressions #
-[MathJax](http://www.mathjax.org/demos/tex-samples) examples.
+[MathJax](https://www.mathjax.org/demos/tex-samples/) examples.
 
 ## simple
 $$ \alpha+\beta=\gamma $$
@@ -32,6 +32,6 @@ $$ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
 {1+\frac{e^{-8\pi}} {1+\ldots} } } } $$
 
-Author: [Jim Hester](http://jimhester.com)
+Author: [Jim Hester](https://www.jimhester.com/)
 Created: 2013 Apr 01 03:27:26 PM
 Last Modified: 2014 Apr 17 04:53:48 PM

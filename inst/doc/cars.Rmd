@@ -11,7 +11,7 @@ output:
 -->
 
 # Cars example #
-From [statmethods.net](http://www.statmethods.net/advgraphs/ggplot2.html).
+From [statmethods.net](https://www.statmethods.net/advgraphs/ggplot2.html).
 
 ```{r cars_setup}
 # ggplot2 examples
@@ -62,6 +62,6 @@ qplot(gear, mpg, data=mtcars, geom=c("boxplot", "jitter"),
    xlab="", ylab="Miles per Gallon")
 ```
 
-Author: [Jim Hester](http://jimhester.com)
+Author: [Jim Hester](https://www.jimhester.com/)
 Created: 2013 Mar 20 10:57:07 AM
 Last Modified: 2014 Apr 17 04:53:11 PM

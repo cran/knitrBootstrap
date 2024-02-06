@@ -1,4 +1,4 @@
-## ----cars_setup----------------------------------------------------------
+## ----cars_setup---------------------------------------------------------------
 # ggplot2 examples
 library(ggplot2)
 #use color brewer as default discrete colors
@@ -15,23 +15,23 @@ mtcars$cyl <- factor(mtcars$cyl,levels=c(4,6,8),
    labels=c("4cyl","6cyl","8cyl"))
 head(mtcars)
 
-## ----cars_density, dev='png', warning=FALSE------------------------------
+## ----cars_density, dev='png', warning=FALSE-----------------------------------
 qplot(mpg, data=mtcars, geom="density", fill=gear, alpha=I(.5),
    main="Distribution of Gas Milage", xlab="Miles Per Gallon",
    ylab="Density")
 
-## ----cars_scatter, dev='png', warning=FALSE------------------------------
+## ----cars_scatter, dev='png', warning=FALSE-----------------------------------
 qplot(hp, mpg, data=mtcars, shape=am, color=am,
    facets=gear~cyl, size=I(3),
    xlab="Horsepower", ylab="Miles per Gallon")
 
-## ----cars_regressions, dev='png', warning=FALSE--------------------------
+## ----cars_regressions, dev='png', warning=FALSE-------------------------------
 ggplot(mtcars, aes(wt, mpg, color = cyl)) +
   geom_point() +
   geom_smooth(method = "lm", formula = y~x) +
   labs(title = "Regression of MPG on Weight", x = "Weight", y = "Miles per Gallon")
 
-## ----cars_boxplots, dev='png', warning=FALSE-----------------------------
+## ----cars_boxplots, dev='png', warning=FALSE----------------------------------
 qplot(gear, mpg, data=mtcars, geom=c("boxplot", "jitter"),
    fill=gear, main="Mileage by Gear Number",
    xlab="", ylab="Miles per Gallon")
